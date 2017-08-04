@@ -33,6 +33,7 @@ public class CleanupPresetPanel {
     private JCheckBox cleanUpRenamePDFonlyRelativePaths;
     private JCheckBox cleanUpUpgradeExternalLinks;
     private JCheckBox cleanUpBiblatex;
+    private JCheckBox cleanUpNonExistingGropus;
     private FieldFormatterCleanupsPanel cleanUpFormatters;
 
     private JPanel panel;
@@ -71,14 +72,14 @@ public class CleanupPresetPanel {
                 Localization.lang("Upgrade external PDF/PS links to use the '%0' field.", FieldName.FILE));
         cleanUpBiblatex = new JCheckBox(Localization.lang(
                 "Convert to biblatex format (for example, move the value of the 'journal' field to 'journaltitle')"));
-
+        cleanUpNonExistingGropus = new JCheckBox(Localization.lang("Remove from non exisitng groups"));
         cleanUpFormatters = new FieldFormatterCleanupsPanel(Localization.lang("Run field formatter:"),
                 Cleanups.DEFAULT_SAVE_ACTIONS);
 
         updateDisplay(cleanupPreset);
 
         FormLayout layout = new FormLayout("left:15dlu, fill:pref:grow",
-                "pref, pref, pref, pref, pref, fill:pref:grow, pref,pref, pref,190dlu, fill:pref:grow,");
+                "pref, pref, pref, pref, pref, pref, fill:pref:grow, pref,pref, pref,190dlu, fill:pref:grow,");
 
         FormBuilder builder = FormBuilder.create().layout(layout);
         builder.add(cleanUpDOI).xyw(1, 1, 2);
@@ -92,7 +93,8 @@ public class CleanupPresetPanel {
         builder.add(cleanUpRenamePDFonlyRelativePaths).xy(2, 7);
         builder.add(cleanUpBiblatex).xyw(1, 8, 2);
         builder.add(cleanUpISSN).xyw(1, 9, 2);
-        builder.add(cleanUpFormatters).xyw(1, 10, 2);
+        builder.add(cleanUpNonExistingGropus).xyw(1, 10, 2);
+        builder.add(cleanUpFormatters).xyw(1, 11, 2);
         panel = builder.build();
         scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -112,6 +114,7 @@ public class CleanupPresetPanel {
         cleanUpUpgradeExternalLinks.setSelected(preset.isCleanUpUpgradeExternalLinks());
         cleanUpBiblatex.setSelected(preset.isConvertToBiblatex());
         cleanUpBiblatex.setSelected(preset.isCleanUpISSN());
+        cleanUpNonExistingGropus.setSelected(preset.isRemoveFromNonExistingGroups());
         cleanUpFormatters.setValues(preset.getFormatterCleanups());
     }
 
@@ -148,6 +151,9 @@ public class CleanupPresetPanel {
         }
         if (cleanUpBiblatex.isSelected()) {
             activeJobs.add(CleanupPreset.CleanupStep.CONVERT_TO_BIBLATEX);
+        }
+        if (cleanUpNonExistingGropus.isSelected()) {
+            activeJobs.add(CleanupPreset.CleanupStep.REMOVE_FROM_NONEXISTING_GROUPS);
         }
 
         activeJobs.add(CleanupPreset.CleanupStep.FIX_FILE_LINKS);

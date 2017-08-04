@@ -63,6 +63,9 @@ public class CleanupPreset {
         if (preferences.getBoolean(JabRefPreferences.CLEANUP_FIX_FILE_LINKS)) {
             activeJobs.add(CleanupStep.FIX_FILE_LINKS);
         }
+        if (preferences.getBoolean(JabRefPreferences.CLEANUP_REMOVE_FROM_NONEXISTING_GROUPS)) {
+            activeJobs.add(CleanupStep.REMOVE_FROM_NONEXISTING_GROUPS);
+        }
 
         FieldFormatterCleanups formatterCleanups = Cleanups.parse(
                 preferences.getStringList(JabRefPreferences.CLEANUP_FORMATTERS));
@@ -106,6 +109,10 @@ public class CleanupPreset {
         return isActive(CleanupStep.RENAME_PDF_ONLY_RELATIVE_PATHS);
     }
 
+	public boolean isRemoveFromNonExistingGroups() {
+		return isActive(CleanupStep.REMOVE_FROM_NONEXISTING_GROUPS);
+	}
+	
     public void storeInPreferences(JabRefPreferences preferences) {
         preferences.putBoolean(JabRefPreferences.CLEANUP_DOI, isActive(CleanupStep.CLEAN_UP_DOI));
         preferences.putBoolean(JabRefPreferences.CLEANUP_ISSN, isActive(CleanupStep.CLEAN_UP_ISSN));
@@ -118,6 +125,7 @@ public class CleanupPreset {
                 isActive(CleanupStep.CLEAN_UP_UPGRADE_EXTERNAL_LINKS));
         preferences.putBoolean(JabRefPreferences.CLEANUP_CONVERT_TO_BIBLATEX, isActive(CleanupStep.CONVERT_TO_BIBLATEX));
         preferences.putBoolean(JabRefPreferences.CLEANUP_FIX_FILE_LINKS, isActive(CleanupStep.FIX_FILE_LINKS));
+        preferences.putBoolean(JabRefPreferences.CLEANUP_REMOVE_FROM_NONEXISTING_GROUPS, isActive(CleanupStep.REMOVE_FROM_NONEXISTING_GROUPS));
 
         preferences.putStringList(JabRefPreferences.CLEANUP_FORMATTERS, formatterCleanups.getAsStringList(OS.NEWLINE));
     }
@@ -148,7 +156,9 @@ public class CleanupPreset {
         CONVERT_TO_BIBLATEX,
         MOVE_PDF,
         FIX_FILE_LINKS,
-        CLEAN_UP_ISSN
+        CLEAN_UP_ISSN,
+        REMOVE_FROM_NONEXISTING_GROUPS
     }
+
 
 }

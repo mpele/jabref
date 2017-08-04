@@ -80,6 +80,9 @@ public class CleanupWorker {
             jobs.add(cleaner);
             unsuccessfulRenames += cleaner.getUnsuccessfulRenames();
         }
+        if (preset.isRemoveFromNonExistingGroups()) {
+        	jobs.add(new NonExistingGroupCleanup());
+        }
 
         return jobs;
     }
